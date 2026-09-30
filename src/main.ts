@@ -1,35 +1,37 @@
-import { Reflector } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-
-import { EnvService } from '@common/config/env.service';
-import { ApiResponseInterceptor } from '@common/interceptors/api-response.interceptor';
-import { ApiExceptionFilter } from '@common/filters/api-exception.filter';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { Logger } from 'nestjs-pino';
+import { EnvService } from '@common/config';
+import { AppLogger } from '@common/logging';
+import { configureApplication } from '@root/bootstrap/application-bootstrap';
 import { AppModule } from '@root/app.module';
 
-const bootstrap = async () => {
-  const app = await NestFactory.create(AppModule.register());
-
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
+export const bootstrap = async (): Promise<void> => {
+  const app = await NestFactory.create<NestExpressApplication>(
+    AppModule.register(),
+    {
+      bufferLogs: true,
+    },
   );
 
- app.useGlobalInterceptors(
-  new ApiResponseInterceptor(app.get(Reflector)),
-);
+  configureApplication(app);
 
-  app.useGlobalFilters(new ApiExceptionFilter());
+  app.useLogger(app.get(Logger));
+  app.enableShutdownHooks();
 
-  const envService: EnvService = app.get(EnvService);
+  const envService = app.get(EnvService);
 
   await app.listen(envService.appPort);
+
+  // AppLogger is transient-scoped, so it must be resolved (not get()) here.
+  const appLogger = await app.resolve(AppLogger);
+
+  appLogger.setContext('Bootstrap');
+
+  appLogger.application({
+    event: 'application.started',
+    port: envService.appPort,
+  });
 };
 
-bootstrap().catch((err) => {
-  console.error('Error starting the application:', err);
-  process.exit(1);
-});
+void bootstrap();

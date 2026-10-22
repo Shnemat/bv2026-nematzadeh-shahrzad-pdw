@@ -9,7 +9,7 @@ export class PasswordHasherService {
   private readonly dummyHashPromise: Promise<string>;
 
   constructor(private readonly envService: EnvService) {
-    this.dummyHashPromise = this.hash('hoos-invalid-dummy');
+    this.dummyHashPromise = this.hash('hoos-invalid-login-dummy');
   }
 
   hash(password: string): Promise<string> {

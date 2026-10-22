@@ -1,3 +1,2 @@
-
-export const normalizeEmail = (value: string): string =>
+﻿export const normalizeEmail = (value: string): string =>
   value.trim().toLowerCase();

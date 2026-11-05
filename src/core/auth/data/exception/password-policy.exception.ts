@@ -1,9 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import {
-  ApiCodeResponse,
-  ApiException,
-  ApiValidationError,
-} from '@common/api';
+import { ApiCodeResponse, ApiException, ApiValidationError } from '@common/api';
 
 export class PasswordPolicyException extends ApiException<null> {
   constructor(validationErrors: ApiValidationError[]) {

@@ -36,8 +36,7 @@ const corsOriginsSchema = nonEmptyStringSchema.transform((value, context) => {
   if (origins.length === 0 || origins.includes('*')) {
     context.addIssue({
       code: z.ZodIssueCode.custom,
-      message:
-        'APP_CORS_ORIGIN must be an explicit allowlist and cannot use *',
+      message: 'APP_CORS_ORIGIN must be an explicit allowlist and cannot use *',
     });
 
     return z.NEVER;
@@ -100,11 +99,7 @@ const environmentSchema = z
       .min(1)
       .max(100)
       .default(5),
-    AUTH_PASSWORD_LOCKOUT_SECONDS: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .default(900),
+    AUTH_PASSWORD_LOCKOUT_SECONDS: z.coerce.number().int().min(1).default(900),
     AUTH_ACCESS_TOKEN_TTL_SECONDS: z.coerce
       .number()
       .int()

@@ -1,7 +1,6 @@
-
 import { SetMetadata } from '@nestjs/common';
 
-export const IS_PUBLIC_KEY = 'isPublic';
+export const PUBLIC_ROUTE = 'auth:public';
 
 export const Public = (): MethodDecorator & ClassDecorator =>
-  SetMetadata(IS_PUBLIC_KEY, true);
+  SetMetadata(PUBLIC_ROUTE, true);

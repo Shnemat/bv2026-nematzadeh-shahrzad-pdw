@@ -1,4 +1,3 @@
-
 import { DynamicModule, Module } from '@nestjs/common';
 
 import { ApiInterceptor, HttpExceptionFilter } from '@common/api';
@@ -22,10 +21,7 @@ export class AppModule {
         AccountModule,
         AuthModule,
       ],
-      providers: [
-        ApiInterceptor,
-        HttpExceptionFilter,
-      ],
+      providers: [ApiInterceptor, HttpExceptionFilter],
     };
   }
 }

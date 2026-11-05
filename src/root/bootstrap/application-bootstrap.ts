@@ -48,10 +48,7 @@ export const configureApplication = (app: INestApplication): void => {
   setupSwagger(app);
 };
 
-const configureHttp = (
-  app: INestApplication,
-  envService: EnvService,
-): void => {
+const configureHttp = (app: INestApplication, envService: EnvService): void => {
   app.use(json({ limit: '1mb' }));
   app.use(urlencoded({ extended: true, limit: '1mb' }));
   app.use(cookieParser());
@@ -59,6 +56,8 @@ const configureHttp = (
 
   const corsOptions: CorsOptions = {
     origin: (origin, callback) => {
+      console.log('Origine reçue par CORS :', origin);
+
       if (!origin || envService.corsOrigins.includes(origin)) {
         callback(null, true);
         return;
@@ -74,8 +73,5 @@ const configureHttp = (
 
   app.enableCors(corsOptions);
 
-  (app as NestExpressApplication).set(
-    'trust proxy',
-    envService.trustProxy,
-  );
+  (app as NestExpressApplication).set('trust proxy', envService.trustProxy);
 };

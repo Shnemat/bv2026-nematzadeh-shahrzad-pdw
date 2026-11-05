@@ -1,4 +1,3 @@
-
 import {
   Body,
   Controller,
@@ -54,11 +53,10 @@ export class AuthController {
   @ApiErrorEnvelopeResponse({
     status: HttpStatus.UNPROCESSABLE_ENTITY,
     code: ApiCodeResponse.AuthPasswordPolicyInvalid,
-    description: 'The password does not satisfy the configured password policy.',
+    description:
+      'The password does not satisfy the configured password policy.',
   })
-  register(
-    @Body() dto: RegisterRequestDto,
-  ): Promise<RegistrationResponseDto> {
+  register(@Body() dto: RegisterRequestDto): Promise<RegistrationResponseDto> {
     return this.authService.register(dto);
   }
 
@@ -170,7 +168,8 @@ export class AuthController {
   @ApiSuccessCode(ApiCodeResponse.AuthLogoutSuccess)
   @ApiEnvelopeResponse(AuthSessionResponseDto, {
     code: ApiCodeResponse.AuthLogoutSuccess,
-    description: 'Revokes the current session and clears authentication cookies.',
+    description:
+      'Revokes the current session and clears authentication cookies.',
   })
   @ApiErrorEnvelopeResponse({
     status: HttpStatus.UNAUTHORIZED,

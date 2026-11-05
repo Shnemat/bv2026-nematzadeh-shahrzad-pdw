@@ -1,10 +1,8 @@
-
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AccountModule } from '@core/account';
-
 import { AuthController } from './controller/auth.controller';
 import { AuthService } from './service/auth.service';
 import { AuthIdentifierService } from './service/auth-identifier.service';

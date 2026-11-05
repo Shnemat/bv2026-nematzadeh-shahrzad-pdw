@@ -1,4 +1,3 @@
-
 import { Column, Entity, ForeignKey, Index } from 'typeorm';
 import { BasePersistenceEntity, ULID_LENGTH } from '@common/database';
 import { AccountEntity } from '@core/account/data/entity/account.entity';

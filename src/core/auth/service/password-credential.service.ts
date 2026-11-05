@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
@@ -38,6 +37,7 @@ export class PasswordCredentialService {
     password: string,
   ): Promise<PasswordCredentialEntity> {
     const repository = manager.getRepository(PasswordCredentialEntity);
+
     const credential = repository.create({
       accountId,
       passwordHash: await this.passwordHasher.hash(password),
@@ -66,9 +66,9 @@ export class PasswordCredentialService {
         failedAttempts: () => 'failed_attempts + 1',
         lastFailedAt: () => 'CURRENT_TIMESTAMP',
         lockedUntil: () =>
-          `(CASE WHEN failed_attempts + 1 >= ${this.envService.passwordMaxAttempts} THEN CURRENT_TIMESTAMP + (${this.envService.passwordLockoutSeconds} * INTERVAL '1 second') ELSE locked_until END)`,
+          `CASE WHEN failed_attempts + 1 >= ${this.envService.passwordMaxAttempts} THEN CURRENT_TIMESTAMP + (${this.envService.passwordLockoutSeconds} * INTERVAL '1 second') ELSE locked_until END`,
       })
-      .where({ id: credentialId })
+      .where('id = :credentialId', { credentialId })
       .andWhere('(locked_until IS NULL OR locked_until <= CURRENT_TIMESTAMP)')
       .execute();
   }

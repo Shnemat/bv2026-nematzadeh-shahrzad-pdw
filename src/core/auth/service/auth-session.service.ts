@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common';
 import { DataSource, EntityManager, IsNull, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -68,6 +67,7 @@ export class AuthSessionService {
         sessionId: session.id,
         tokenHash: this.tokenCrypto.fingerprint(refreshToken),
         expiresAt: refreshExpiresAt,
+        consumedAt: null,
         revokedAt: null,
         replacedById: null,
         parentId: null,
@@ -77,9 +77,7 @@ export class AuthSessionService {
     return { session, refreshToken, csrfToken, refreshExpiresAt };
   }
 
-  async verifyContext(
-    context: AuthContext,
-  ): Promise<AuthSessionEntity> {
+  async verifyContext(context: AuthContext): Promise<AuthSessionEntity> {
     const session = await this.sessionRepository.findOneBy({
       id: context.sessionId,
     });
@@ -128,10 +126,7 @@ export class AuthSessionService {
     this.throwIfInjected('during-family-revocation');
   }
 
-  async revokeAll(
-    manager: EntityManager,
-    accountId: string,
-  ): Promise<void> {
+  async revokeAll(manager: EntityManager, accountId: string): Promise<void> {
     const sessions = await manager.getRepository(AuthSessionEntity).findBy({
       accountId,
       revokedAt: IsNull(),
@@ -142,10 +137,7 @@ export class AuthSessionService {
     }
   }
 
-  async revokeCurrent(
-    sessionId: string,
-    reason: string,
-  ): Promise<void> {
+  async revokeCurrent(sessionId: string, reason: string): Promise<void> {
     await this.dataSource.transaction(async (manager) => {
       await this.revoke(manager, sessionId, reason);
     });
@@ -161,7 +153,7 @@ export class AuthSessionService {
 
   private throwIfInjected(point: string): void {
     if (this.envService.testRefreshFailurePoint === point) {
-      throw new Error(`Injected auth-session failure at ${point}`);
+      throw new Error(`Injected auth-session failure: ${point}`);
     }
   }
 }

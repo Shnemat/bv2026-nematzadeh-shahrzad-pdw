@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common';
 import type { CookieOptions } from 'express';
 import type { Response } from 'express';
@@ -36,22 +35,14 @@ export class AuthCookieService {
     });
   }
 
-  setRefreshCookie(
-    response: Response,
-    token: string,
-    expiresAt: Date,
-  ): void {
+  setRefreshCookie(response: Response, token: string, expiresAt: Date): void {
     response.cookie(this.names.refresh, token, {
       ...this.baseOptions(true),
       expires: expiresAt,
     });
   }
 
-  setCsrfCookie(
-    response: Response,
-    token: string,
-    expiresAt: Date,
-  ): void {
+  setCsrfCookie(response: Response, token: string, expiresAt: Date): void {
     response.cookie(this.names.csrf, token, {
       ...this.baseOptions(false),
       expires: expiresAt,

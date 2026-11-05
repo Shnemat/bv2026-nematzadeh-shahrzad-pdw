@@ -1,7 +1,7 @@
 import { join } from 'node:path';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DataSourceOptions } from 'typeorm';
-import { AppMode, EnvService, ValidatedEnvironment } from '../../config';
+import { EnvService, ValidatedEnvironment } from '../../config';
 
 export const createNestTypeOrmOptions = (
   envService: EnvService,
@@ -48,12 +48,12 @@ export const createTypeOrmDataSourceOptions = (
     host: environment.DB_HOST,
     port: environment.DB_PORT,
     username: environment.DB_USER,
-  password: environment.DB_PASSWORD as string,
-   database: environment.DB_DATABASE as string,
-    synchronize: environment.DB_SYNC as boolean,
-migrationsRun: environment.DB_MIGRATION as boolean,
-logging: environment.DB_LOG as boolean,
-   schema: environment.DB_SCHEMA as string,
+    password: environment.DB_PASSWORD,
+    database: environment.DB_DATABASE,
+    synchronize: environment.DB_SYNC,
+    migrationsRun: environment.DB_MIGRATION,
+    logging: environment.DB_LOG,
+    schema: environment.DB_SCHEMA,
     extra:
       environment.DB_SCHEMA === 'public'
         ? undefined

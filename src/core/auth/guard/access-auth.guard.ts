@@ -1,18 +1,16 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import type { Request } from 'express';
+
+import { EnvService } from '@common/config';
+
 import { AuthContext } from '../data/model/auth-context';
 import { AuthSecurityException } from '../data/exception/auth-security.exception';
+import { PUBLIC_ROUTE } from '../decorator/public.decorator';
 import { AuthCookieService } from '../service/auth-cookie.service';
 import { AuthSessionService } from '../service/auth-session.service';
 import { CsrfService } from '../service/csrf.service';
 import { TokenCryptoService } from '../service/token-crypto.service';
-import { EnvService } from '@common/config';
-import { IS_PUBLIC_KEY } from '../decorator/public.decorator';
 
 type AuthRequest = Request & { auth?: AuthContext };
 
@@ -28,7 +26,7 @@ export class AccessAuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+    const isPublic = this.reflector.getAllAndOverride<boolean>(PUBLIC_ROUTE, [
       context.getHandler(),
       context.getClass(),
     ]);

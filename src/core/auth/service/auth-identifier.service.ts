@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
@@ -13,14 +12,14 @@ export class AuthIdentifierService {
     private readonly identifierRepository: Repository<AuthIdentifierEntity>,
   ) {}
 
-  async findMail(value: string): Promise<AuthIdentifierEntity | null> {
+  async findEmail(value: string): Promise<AuthIdentifierEntity | null> {
     return this.identifierRepository.findOneBy({
       type: AuthIdentifierType.Email,
       value,
     });
   }
 
-  async findMailInTransaction(
+  async findEmailInTransaction(
     manager: EntityManager,
     value: string,
   ): Promise<AuthIdentifierEntity | null> {
@@ -36,6 +35,7 @@ export class AuthIdentifierService {
     value: string,
   ): Promise<AuthIdentifierEntity> {
     const repository = manager.getRepository(AuthIdentifierEntity);
+
     const identifier = repository.create({
       accountId,
       type: AuthIdentifierType.Email,

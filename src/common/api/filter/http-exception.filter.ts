@@ -69,8 +69,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     statusCode: HttpStatus,
     code: string,
   ): void {
-    const requestId =
-      typeof request.id === 'string' ? request.id : undefined;
+    const requestId = typeof request.id === 'string' ? request.id : undefined;
 
     const exceptionName =
       exception instanceof Error

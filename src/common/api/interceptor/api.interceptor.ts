@@ -26,10 +26,10 @@ export class ApiInterceptor implements NestInterceptor {
     }
 
     const code =
-      this.reflector.getAllAndOverride<string>(
-        API_SUCCESS_CODE_METADATA_KEY,
-        [context.getHandler(), context.getClass()],
-      ) ?? ApiCodeResponse.CommonSuccess;
+      this.reflector.getAllAndOverride<string>(API_SUCCESS_CODE_METADATA_KEY, [
+        context.getHandler(),
+        context.getClass(),
+      ]) ?? ApiCodeResponse.CommonSuccess;
 
     return next.handle().pipe(map((data) => ApiResponse.success(data, code)));
   }

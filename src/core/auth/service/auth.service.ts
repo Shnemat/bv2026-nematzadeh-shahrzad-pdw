@@ -1,4 +1,3 @@
-
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 
@@ -44,7 +43,7 @@ export class AuthService {
     try {
       const account = await this.dataSource.transaction(async (manager) => {
         const existingIdentifier =
-          await this.authIdentifierService.findMailInTransaction(
+          await this.authIdentifierService.findEmailInTransaction(
             manager,
             email,
           );
@@ -98,10 +97,8 @@ export class AuthService {
     const email = normalizeEmail(dto.email);
 
     const result = await this.dataSource.transaction(async (manager) => {
-      const identifier = await this.authIdentifierService.findMailInTransaction(
-        manager,
-        email,
-      );
+      const identifier =
+        await this.authIdentifierService.findEmailInTransaction(manager, email);
 
       if (!identifier) {
         await this.passwordHasherService.verifyAgainstDummy(dto.password);
@@ -131,8 +128,7 @@ export class AuthService {
         !credential ||
         !passwordMatches ||
         !this.accountService.canAuthenticate(account) ||
-        (credential.lockedUntil !== null &&
-          credential.lockedUntil > new Date())
+        (credential.lockedUntil !== null && credential.lockedUntil > new Date())
       ) {
         if (credential && !passwordMatches) {
           await this.passwordCredentialService.recordFailedAttempt(

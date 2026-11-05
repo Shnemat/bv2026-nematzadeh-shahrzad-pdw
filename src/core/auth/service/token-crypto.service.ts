@@ -148,17 +148,12 @@ export class TokenCryptoService {
   }
 
   fingerprint(value: string): string {
-    return createHmac('sha256', this.refreshPepper)
-      .update(value)
-      .digest('hex');
+    return createHmac('sha256', this.refreshPepper).update(value).digest('hex');
   }
 
   private resolvePepper(): Buffer {
     if (this.envService.refreshTokenPepper) {
-      const pepper = Buffer.from(
-        this.envService.refreshTokenPepper,
-        'base64',
-      );
+      const pepper = Buffer.from(this.envService.refreshTokenPepper, 'base64');
 
       if (pepper.length >= 32) {
         return pepper;
@@ -224,9 +219,8 @@ export class TokenCryptoService {
     return {
       privateKeyPem,
       publicKeys: {
-        [this.envService.jwtActiveKid]: Buffer.from(publicKeyPem).toString(
-          'base64',
-        ),
+        [this.envService.jwtActiveKid]:
+          Buffer.from(publicKeyPem).toString('base64'),
       },
     };
   }
@@ -243,10 +237,7 @@ export class TokenCryptoService {
     }
   }
 
-  private validateKeyMaterial(
-    privateKeyPem: string,
-    keys: TrustedKeys,
-  ): void {
+  private validateKeyMaterial(privateKeyPem: string, keys: TrustedKeys): void {
     try {
       const privateKey = createPrivateKey(privateKeyPem);
 
@@ -271,9 +262,7 @@ export class TokenCryptoService {
           publicKey.asymmetricKeyType !== 'ec' ||
           publicKey.asymmetricKeyDetails?.namedCurve !== 'prime256v1'
         ) {
-          throw new Error(
-            `JWT public key ${kid} must be an EC P-256 key`,
-          );
+          throw new Error(`JWT public key ${kid} must be an EC P-256 key`);
         }
 
         publicKeyObjects.set(kid, publicKey);
@@ -301,9 +290,7 @@ export class TokenCryptoService {
         derived.length !== configured.length ||
         !timingSafeEqual(derived, configured)
       ) {
-        throw new Error(
-          'JWT private key does not match active public key',
-        );
+        throw new Error('JWT private key does not match active public key');
       }
     } catch {
       throw new Error('JWT key material is invalid');
